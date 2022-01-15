@@ -1,12 +1,13 @@
 #[macro_use]
 extern crate rocket;
+use rocket_dyn_templates::Template;
 #[macro_use]
 extern crate lazy_static;
 use clap::Parser;
 use markov::Chain;
 use std::{
     fs::File,
-    io::{BufRead, BufReader},
+    io::{BufRead, BufReader}, collections::HashMap,
 };
 
 lazy_static! {
@@ -15,16 +16,16 @@ lazy_static! {
 }
 
 #[get("/")]
-fn index() -> String {
-    CHAIN.generate_str()
+fn index() -> Template {
+    let context: HashMap<&str, String> = [("wisdom", CHAIN.generate_str())].iter().cloned().collect();
+    Template::render("index", context)
 }
 
 #[launch]
 fn rocket() -> _ {
     let mut config = rocket::Config::default();
     config.port = ARGS.port;
-    rocket::custom(config).mount("/", routes![index])
-    //rocket::build().mount("/", routes![index])
+    rocket::custom(config).attach(Template::fairing()).mount("/", routes![index])
 }
 
 fn build_chain() -> Chain<String> {
