@@ -1,0 +1,15 @@
+[Unit]
+Description=Wisdom Server
+
+[Service]
+User=wisdom
+Group=wisdom
+
+Type=exec
+Restart=on-failure
+
+ExecStart=/media/data/wisdom --input input
+WorkingDirectory=/media/data/wisdom
+
+[Install]
+WantedBy=default.target
