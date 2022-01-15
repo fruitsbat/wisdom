@@ -6,8 +6,9 @@ extern crate lazy_static;
 use clap::Parser;
 use markov::Chain;
 use std::{
+    collections::HashMap,
     fs::File,
-    io::{BufRead, BufReader}, collections::HashMap,
+    io::{BufRead, BufReader},
 };
 
 lazy_static! {
@@ -17,7 +18,8 @@ lazy_static! {
 
 #[get("/")]
 fn index() -> Template {
-    let context: HashMap<&str, String> = [("wisdom", CHAIN.generate_str())].iter().cloned().collect();
+    let context: HashMap<&str, String> =
+        [("wisdom", CHAIN.generate_str())].iter().cloned().collect();
     Template::render("index", context)
 }
 
@@ -25,7 +27,9 @@ fn index() -> Template {
 fn rocket() -> _ {
     let mut config = rocket::Config::default();
     config.port = ARGS.port;
-    rocket::custom(config).attach(Template::fairing()).mount("/", routes![index])
+    rocket::custom(config)
+        .attach(Template::fairing())
+        .mount("/", routes![index])
 }
 
 fn build_chain() -> Chain<String> {
