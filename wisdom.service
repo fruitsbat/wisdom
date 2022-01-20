@@ -8,7 +8,7 @@ Group=wisdom
 Type=exec
 Restart=on-failure
 
-ExecStart=/media/data/wisdom --input input
+ExecStart=/media/data/wisdom
 WorkingDirectory=/media/data/wisdom
 
 [Install]

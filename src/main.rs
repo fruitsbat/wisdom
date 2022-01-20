@@ -1,7 +1,7 @@
 #[macro_use]
 extern crate rocket;
 use rocket_dyn_templates::Template;
-use rocket::fs::{FileServer, relative};
+use rocket::fs::{FileServer, relative, NamedFile};
 #[macro_use]
 extern crate lazy_static;
 use clap::Parser;
@@ -19,8 +19,8 @@ lazy_static! {
 }
 
 #[get("/")]
-fn index() -> String {
-    "Hello".to_string()
+async fn index() -> Option<NamedFile> {
+    NamedFile::open("static/index.html").await.ok()
 }
 
 #[get("/cooking")]
