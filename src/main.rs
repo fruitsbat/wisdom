@@ -1,6 +1,7 @@
 #[macro_use]
 extern crate rocket;
 use rocket_dyn_templates::Template;
+use rocket::fs::{FileServer, relative};
 #[macro_use]
 extern crate lazy_static;
 use clap::Parser;
@@ -38,6 +39,7 @@ fn rocket() -> _ {
     config.port = ARGS.port;
     rocket::custom(config)
         .attach(Template::fairing())
+        .mount("/static", FileServer::from(relative!("static")))
         .mount("/", routes![index, cooking, frakes])
 }
 
